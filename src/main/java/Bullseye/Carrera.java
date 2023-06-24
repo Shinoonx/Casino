@@ -1,166 +1,240 @@
 package Bullseye;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Carrera {
-    private JugadorBulls jugadorBulls;
-    private ArrayList<Caballo> caballos = new ArrayList<>();
-    private ArrayList<JugadorBulls> jugadoresBulls = new ArrayList<>();
-    private Caballo caballoganador;
 
-    public Carrera(JugadorBulls jugadorBulls) {
-        this.jugadorBulls = jugadorBulls;
+    private List<Caballo> caballos = new ArrayList<>();
+    private List<jugadorBulls> jugadores = new ArrayList<>();
+    private jugadorBulls jugador1;
+    private String nombreJugador1;
+    private int dinero = 50000;
+    private int dineroApostado;
+
+    public Carrera() {
+        caballos();
+        jugadores();
     }
 
-    public void AñadirCaballos() {
-        Caballo caballo1 = new Caballo("Epona", 0, "Bronce");
+    public void caballos() {
+        Caballo caballo1 = new Caballo("Epona", 1, "Bronce");
         caballos.add(caballo1);
-        Caballo caballo2 = new Caballo("Agro", 1, "Negro");
+        Caballo caballo2 = new Caballo("Agro", 2, "Negro");
         caballos.add(caballo2);
-        Caballo caballo3 = new Caballo("Pegaso", 2, "Blanco");
+        Caballo caballo3 = new Caballo("Pegaso", 3, "Blanco");
         caballos.add(caballo3);
-        Caballo caballo4 = new Caballo("Sardinilla", 3, "Cafe");
+        Caballo caballo4 = new Caballo("Sardinilla", 4, "Cafe");
         caballos.add(caballo4);
-        Caballo caballo5 = new Caballo("Calus", 4, "Marron");
+        Caballo caballo5 = new Caballo("Calus", 5, "Marron");
         caballos.add(caballo5);
-        Caballo caballo6 = new Caballo("Spirit", 5, "Anaranjado");
+        Caballo caballo6 = new Caballo("Spirit", 6, "Anaranjado");
         caballos.add(caballo6);
     }
-    public void Botbulls() {
+
+
+    public void jugadores() {
+
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Nombre de Jugador");
+        nombreJugador1 = teclado.nextLine();
+        jugador1 = new jugadorBulls(nombreJugador1, 50000);
+
+        jugadores.add(jugador1);
+
+        jugadorBulls bot1 = new jugadorBulls("Vendedor de Madera", 50000);
+        jugadorBulls bot2 = new jugadorBulls("Papi Miki", 50000);
+        jugadorBulls bot3 = new jugadorBulls("Goku", 50000);
+        jugadorBulls bot4 = new jugadorBulls("Tio Rene", 50000);
+        jugadorBulls bot5 = new jugadorBulls("Vendedor de Leña", 50000);
+
+
+        jugadores.add(bot1);
+        jugadores.add(bot2);
+        jugadores.add(bot3);
+        jugadores.add(bot4);
+        jugadores.add(bot5);
+    }
+
+    public void seleccionarCaballo() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Elige un Caballo");
+
+        int opcion = scanner.nextInt();
+        Caballo caballoSeleccionado = caballos.get(opcion - 1);
+
+        jugador1.asignarCaballo(caballoSeleccionado);
+        caballos.remove(caballoSeleccionado);
+
         Random random = new Random();
-
-        JugadorBulls botbulls1 = new JugadorBulls("Huevito Rey");
-        botbulls1.SetNumero((int)(Math.random()*5));
-
-        JugadorBulls botbulls2 = new JugadorBulls("Tio Rene");
-        botbulls2.SetNumero((int)(Math.random()*5));
-
-        JugadorBulls botbulls3 = new JugadorBulls("Papi Miki");
-        botbulls3.SetNumero((int)(Math.random()*5));
-
-        JugadorBulls botbulls4 = new JugadorBulls("Goku");
-        botbulls4.SetNumero((int)(Math.random()*5));
-
-        JugadorBulls botbulls5 = new JugadorBulls("Vendedor de leña");
-        botbulls5.SetNumero((int)(Math.random()*5));
-
-        jugadoresBulls.add(botbulls1);
-        jugadoresBulls.add(botbulls2);
-        jugadoresBulls.add(botbulls3);
-        jugadoresBulls.add(botbulls4);
-        jugadoresBulls.add(botbulls5);
-
-        System.out.println((int)(Math.random()*5));
-    }
-    public void DarNumRAndomCaballos() {
-        for (int i = 0; i < caballos.size(); i++) {
-            caballos.get(i).setTiempo();
+        for (jugadorBulls jugador : jugadores) {
+            if (jugador != jugador1) {
+                int index = random.nextInt(caballos.size());
+                Caballo caballoAsignado = caballos.get(index);
+                jugador.asignarCaballo(caballoAsignado);
+                caballos.remove(caballoAsignado);
+            }
         }
     }
-    public void DarNumJugador(){
-        Scanner teclado = new Scanner(System.in);
 
-        System.out.println("Eliga el numero del caballo por el que va a apostar del 0 al 5");
-        int num = teclado.nextInt();
+    public void iniciarCarrera() {
 
-        jugadorBulls.SetNumero(num);
-    }
+        Scanner scanner = new Scanner(System.in);
+        BienvenidaBulls();
+        while (true) {
+            MostrarParticipantes();
+            hud();
+            seleccionarCaballo();
 
-    public int ElegirMontoApuesta() {
-        int monto = 0;
-        Scanner teclado = new Scanner(System.in);
-        System.out.println("ELiga monto que va a apostar");
-        System.out.println("[1]500");
-        System.out.println("[2]1000");
-        System.out.println("[3]5000");
-        System.out.println("[4]10000");
-        System.out.println("[5]25000");
-        System.out.println("[6]50000");
-        int opcion = teclado.nextInt();
-        switch (opcion) {
-            case 1:
-                monto = 500;
+            System.out.println("-------------------------------------------------------------------");
+            System.out.println("Selecciona el monto para apostar:");
+            System.out.println("1. $500");
+            System.out.println("2. $1000");
+            System.out.println("3. $5000");
+            System.out.println("4. $10000");
+            System.out.println("5. $25000");
+            System.out.println("6. $50000");
+            System.out.println("7. Salir");
+
+            int opcion = scanner.nextInt();
+
+            if (opcion == 7) {
                 break;
-            case 2:
-                monto = 1000;
-                break;
-            case 3:
-                monto = 5000;
-                break;
-            case 4:
-                monto = 10000;
-                break;
-            case 5:
-                monto = 25000;
-                break;
-            case 6:
-                monto = 50000;
+            }
+            int monto = obtenerMonto(opcion);
+            if (monto > dinero) {
+                System.out.println("No tienes suficiente dinero para apostar");
+                continue;
+            }
+            dineroApostado = monto;
+            dinero -= dineroApostado;
+
+            System.out.println("Has apostado: $" + dineroApostado + " por " + jugador1.getCaballoAsignado().getNameHorse());
+            System.out.println("");
+            System.out.println("");
+            System.out.println("Empieza la carrera");
+
+            int[] tiempos = generarTiempos();
+
+            System.out.println("");
+            System.out.println("--------------------------[Resultados de la carrera]------------------------");
+            for (int i = 0; i < jugadores.size(); i++) {
+                jugadorBulls jugador = jugadores.get(i);
+                Caballo caballo = jugador.getCaballoAsignado();
+                int tiempo = tiempos[i];
+
+                System.out.println(jugador.getName() + " - " + caballo.getNameHorse() + " (" + caballo.getColor() + "): " + tiempo + " segundos");
+            }
+            System.out.println("");
+            System.out.println("");
+            System.out.println("--------------------------[GANADOR!!!]------------------------");
+            int tiempoGanador = obtenerGanador(tiempos);
+            jugadorBulls jugadorGanador = jugadores.get(tiempoGanador);
+            Caballo caballoGanador = jugadorGanador.getCaballoAsignado();
+            System.out.println("");
+            System.out.println(jugadorGanador.getName() + " - " + caballoGanador.getNameHorse() + " (" + caballoGanador.getColor() + ")");
+
+            if (jugadorGanador == jugador1){
+                int premio = obtenerPremio(opcion);
+                dinero += dineroApostado * premio;
+                System.out.println("¡Felicidades! Has ganado $" + (dineroApostado * premio));
+            } else {
+                System.out.println("Lo siento, has perdido.");
+                System.out.println("");
+                System.out.println("Dinero actual: $" + dinero);
+                dineroApostado = 0;
+                if (dinero < 0){
+                    System.out.println("Te has quedado sin dinero. El juego ha terminado");
+                    break;
+                }
+            }
+            System.out.println("");
+            System.out.println("Gracias por jugar");
+            System.out.println("-------------------------------------------------------------------");
         }
-        return monto;
     }
-    public int multiplicadorMonto(int opcion){
+
+    public int obtenerMonto(int opcion) {
+        int[] montos = {500, 1000, 5000, 10000, 25000, 50000};
+        return montos[opcion - 1];
+    }
+
+    public int[] generarTiempos() {
+        Random random = new Random();
+        int[] tiempos = new int[jugadores.size()];
+
+        for (int i = 0; i < tiempos.length; i++) {
+            tiempos[i] = random.nextInt(8) + 4;
+        }
+        return tiempos;
+    }
+
+    public int obtenerGanador(int[] tiempos) {
+        int ganador = 0;
+
+        for (int i = 1; i < tiempos.length; i++) {
+            if (tiempos[i] < tiempos[ganador]) {
+                ganador = i;
+            }
+        }
+        return ganador;
+    }
+
+    public int obtenerPremio(int opcion){
         int[] multiplicadores ={2,3,4,5,7,10};
         return multiplicadores[opcion-1];
     }
-    public void ImprimirDatosCaballoganador(){
-        System.out.println("El caballo ganador fue: ");
-        caballoganador.GetDatos();
-    }
-    public void ElegirCaballoGanador(){
-        caballoganador = caballos.get(0);
+    public void hud(){
+        System.out.println("-------------------------------" + "Jugador: " + nombreJugador1 + "----------------------------");
+        System.out.println("Monto actual: $" + dinero);
+        System.out.println("");
+        System.out.println("Caballos disponibles para apostar:");
 
-        for (int i = 0; i <caballos.size() ; i++) {
-            if (caballos.get(i).getTiempo() > caballoganador.getTiempo()){
-                caballoganador = caballos.get(i);
-            }
-        }
-    }
-    public void ResultadoJugador(int apuesta){
-        int montoGanado;
-        if (jugadorBulls.GetNumero() == caballoganador.getId()){
-            montoGanado = multiplicadorMonto(apuesta);
-            System.out.println("jugador " + jugadorBulls.GetNombre() + " gano: " + montoGanado);
-        }else{
-            montoGanado = (-apuesta);
-            System.out.println("jugador " + jugadorBulls.GetNombre() + " perdio: " + montoGanado);
-        }
-        jugadorBulls.setMonto(montoGanado);
-
-        System.out.println("Usted tiene: " + jugadorBulls.GetMonto() + " pesos");
-    }
-    public void ResultadoBots(){
-        for (int i = 0; i < jugadoresBulls.size(); i++) {
-            if (jugadoresBulls.get(i).GetNumero() == caballoganador.getId()){
-                System.out.println("jugador " + jugadoresBulls.get(i).GetNombre() + " gano");
-            }else{
-                System.out.println("jugador " + jugadoresBulls.get(i).GetNombre() + " perdio");
-            }
-        }
-    }
-    public void MostrarCaballos() {
         for (Caballo caballo : caballos) {
-            System.out.println(caballo.getId() + ".- " + caballo.getNombre() + " (" + caballo.getColor() + ")");
+            System.out.println(caballo.getID() + ". " + caballo.getNameHorse() + " (" + caballo.getColor() + ")");
         }
     }
-
-    public void Jugar(){
-        AñadirCaballos();
-        DarNumRAndomCaballos();
-        MostrarCaballos();
-        DarNumJugador();
-
-        int apuesta = ElegirMontoApuesta();
-        
-        ElegirCaballoGanador();
-        ImprimirDatosCaballoganador();
-        System.out.println();
-        ResultadoJugador(apuesta);
-
-        Botbulls();
-        ResultadoBots();
+    public void BienvenidaBulls(){
+        System.out.println("----------------------------" + "Bienvenido a Bullseye" + "----------------------------");
+        System.out.println("");
     }
+    public void MostrarParticipantes(){
+        System.out.println("Participantes: ");
+        for (int i = 0; i < jugadores.size(); i++) {
+            System.out.println("-"+jugadores.get(i).getName());
+        }
+        System.out.println("");
+    }
+    public int seleccionarMontoApostar() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Selecciona el monto para apostar:");
+        System.out.println("1. $500");
+        System.out.println("2. $1000");
+        System.out.println("3. $5000");
+        System.out.println("4. $10000");
+        System.out.println("5. $25000");
+        System.out.println("6. $50000");
+        System.out.println("7. Salir");
 
+        int opcion = scanner.nextInt();
 
+        if (opcion == 7) {
+            return -1;
+        }
+
+        int monto = obtenerMonto(opcion);
+        if (monto > dinero) {
+            System.out.println("No tienes suficiente dinero para apostar");
+            return -2;
+        }
+
+        dineroApostado = monto;
+        dinero -= dineroApostado;
+
+        return opcion;
+    }
 }
+
+

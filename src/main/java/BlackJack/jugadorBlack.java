@@ -1,24 +1,29 @@
 package BlackJack;
 
 import Casino.Usuario;
+import com.sun.management.UnixOperatingSystemMXBean;
 
 import java.util.ArrayList;
 
-public class JugadorBlack extends Usuario {
+public class jugadorBlack extends Usuario {
+
     private int puntaje;
     private ArrayList<Carta> mano = new ArrayList<Carta>();
 
-    public JugadorBlack(String nombre) {
-        this.nombre = nombre;
-    }
+
+
     public void setMano(Carta carta) {
         mano.add(carta);
     }
 
-    public String getNombre(){
-        return nombre;
+    public jugadorBlack(String usuario) {
+        super(usuario);
+        this.nombre = usuario;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
 
     public void setPuntaje() {
         for (int i = 0; i < mano.size(); i++) {
@@ -39,4 +44,3 @@ public class JugadorBlack extends Usuario {
     }
 
 }
-
