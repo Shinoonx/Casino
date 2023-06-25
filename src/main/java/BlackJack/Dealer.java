@@ -1,24 +1,24 @@
 package BlackJack;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
 public class Dealer {
-
-    private String nombre;
-    private ArrayList<jugadorBlack> Jugadores = new ArrayList<jugadorBlack>();
+    private JugadorBlack player1;
+    private ArrayList<JugadorBlack> Jugadores = new ArrayList<JugadorBlack>();
     private ArrayList<Carta> mazo = new ArrayList<Carta>();
     private ArrayList<Carta> mano = new ArrayList<Carta>();
 
     public void setPlayers() {
-        System.out.println("Nombre de Jugador");
-        System.out.println("  "+nombre);
-        jugadorBlack player = new jugadorBlack(nombre);
+
+        JugadorBlack player = new JugadorBlack(player1.getNombre());
         Jugadores.add(player);
     }
 
     public Dealer(String nombre) {
-        this.nombre = nombre;
+        player1 = new JugadorBlack(nombre);
+
     }
 
     public void CrearMazito() {
@@ -30,6 +30,7 @@ public class Dealer {
     public void mezclarMazo() {
         Collections.shuffle(mazo);
     }
+
 
     public void darCartas() {
         for (int i = 0; i < Jugadores.size(); i++) {
@@ -81,8 +82,37 @@ public class Dealer {
         }
     }
     public void imprimirManoJugador() {
-        for (jugadorBlack jugador : Jugadores) {
-            jugador.imprimirMano();
+        for (JugadorBlack jugador1 : Jugadores) {
+            jugador1.imprimirManoJ();
         }
+    }
+    public void volverAJugar() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("¿Volver A Jugar? (S/N)");
+        System.out.println("");
+        String respuesta = scanner.nextLine();
+
+        if (respuesta.equalsIgnoreCase("S")) {
+            Jugar();
+        } else {
+            System.exit(0);
+        }
+    }
+    public void limpiarManos() {
+        Jugadores.clear();
+        mano.clear();
+    }
+
+    public void Jugar() {
+
+        CrearMazito();
+        setPlayers();
+        mezclarMazo();
+        darCartas();
+        imprimirManoJugador();
+        imprimirMano();
+        calcularPuntaje();
+        limpiarManos();
+        volverAJugar();
     }
 }

@@ -1,5 +1,7 @@
 package Bullseye;
 
+import Casino.Casino;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,14 +10,13 @@ import java.util.Scanner;
 public class Carrera {
 
     private List<Caballo> caballos = new ArrayList<>();
-    private List<jugadorBulls> jugadores = new ArrayList<>();
-    private jugadorBulls jugador1;
-    private String nombreJugador1;
+    private List<JugadorBulls> jugadores = new ArrayList<>();
+    private JugadorBulls jugador1;
     private int dinero = 50000;
     private int dineroApostado;
 
-    public Carrera() {
-        caballos();
+    public Carrera(String nombre) {
+        jugador1 = new JugadorBulls(nombre);
         jugadores();
     }
 
@@ -36,19 +37,13 @@ public class Carrera {
 
 
     public void jugadores() {
-
-        Scanner teclado = new Scanner(System.in);
-        System.out.println("Nombre de Jugador");
-        nombreJugador1 = teclado.nextLine();
-        jugador1 = new jugadorBulls(nombreJugador1, 50000);
-
+        jugador1 = new JugadorBulls(jugador1.getNombre());
         jugadores.add(jugador1);
-
-        jugadorBulls bot1 = new jugadorBulls("Vendedor de Madera", 50000);
-        jugadorBulls bot2 = new jugadorBulls("Papi Miki", 50000);
-        jugadorBulls bot3 = new jugadorBulls("Goku", 50000);
-        jugadorBulls bot4 = new jugadorBulls("Tio Rene", 50000);
-        jugadorBulls bot5 = new jugadorBulls("Vendedor de Leña", 50000);
+        JugadorBulls bot1 = new JugadorBulls("Vendedor de Madera");
+        JugadorBulls bot2 = new JugadorBulls("Papi Miki");
+        JugadorBulls bot3 = new JugadorBulls("Goku");
+        JugadorBulls bot4 = new JugadorBulls("Tio Rene");
+        JugadorBulls bot5 = new JugadorBulls("Vendedor de Leña");
 
 
         jugadores.add(bot1);
@@ -66,15 +61,13 @@ public class Carrera {
         Caballo caballoSeleccionado = caballos.get(opcion - 1);
 
         jugador1.asignarCaballo(caballoSeleccionado);
-        caballos.remove(caballoSeleccionado);
 
         Random random = new Random();
-        for (jugadorBulls jugador : jugadores) {
+        for (JugadorBulls jugador : jugadores) {
             if (jugador != jugador1) {
                 int index = random.nextInt(caballos.size());
                 Caballo caballoAsignado = caballos.get(index);
                 jugador.asignarCaballo(caballoAsignado);
-                caballos.remove(caballoAsignado);
             }
         }
     }
@@ -82,9 +75,10 @@ public class Carrera {
     public void iniciarCarrera() {
 
         Scanner scanner = new Scanner(System.in);
+        caballos();
         BienvenidaBulls();
+        MostrarParticipantes();
         while (true) {
-            MostrarParticipantes();
             hud();
             seleccionarCaballo();
 
@@ -121,20 +115,20 @@ public class Carrera {
             System.out.println("");
             System.out.println("--------------------------[Resultados de la carrera]------------------------");
             for (int i = 0; i < jugadores.size(); i++) {
-                jugadorBulls jugador = jugadores.get(i);
+                JugadorBulls jugador = jugadores.get(i);
                 Caballo caballo = jugador.getCaballoAsignado();
                 int tiempo = tiempos[i];
 
-                System.out.println(jugador.getName() + " - " + caballo.getNameHorse() + " (" + caballo.getColor() + "): " + tiempo + " segundos");
+                System.out.println(jugador.getnombre() + " - " + caballo.getNameHorse() + " (" + caballo.getColor() + "): " + tiempo + " segundos");
             }
             System.out.println("");
             System.out.println("");
             System.out.println("--------------------------[GANADOR!!!]------------------------");
             int tiempoGanador = obtenerGanador(tiempos);
-            jugadorBulls jugadorGanador = jugadores.get(tiempoGanador);
+            JugadorBulls jugadorGanador = jugadores.get(tiempoGanador);
             Caballo caballoGanador = jugadorGanador.getCaballoAsignado();
             System.out.println("");
-            System.out.println(jugadorGanador.getName() + " - " + caballoGanador.getNameHorse() + " (" + caballoGanador.getColor() + ")");
+            System.out.println(jugadorGanador.getnombre() + " - " + caballoGanador.getNameHorse() + " (" + caballoGanador.getColor() + ")");
 
             if (jugadorGanador == jugador1){
                 int premio = obtenerPremio(opcion);
@@ -150,6 +144,7 @@ public class Carrera {
                     break;
                 }
             }
+            continuarJugando();
             System.out.println("");
             System.out.println("Gracias por jugar");
             System.out.println("-------------------------------------------------------------------");
@@ -187,7 +182,7 @@ public class Carrera {
         return multiplicadores[opcion-1];
     }
     public void hud(){
-        System.out.println("-------------------------------" + "Jugador: " + nombreJugador1 + "----------------------------");
+        System.out.println("-------------------------------" + "Jugador: " + jugador1.getnombre() + "----------------------------");
         System.out.println("Monto actual: $" + dinero);
         System.out.println("");
         System.out.println("Caballos disponibles para apostar:");
@@ -198,43 +193,27 @@ public class Carrera {
     }
     public void BienvenidaBulls(){
         System.out.println("----------------------------" + "Bienvenido a Bullseye" + "----------------------------");
+        System.out.println("Jugador: " + jugador1.getnombre());
         System.out.println("");
     }
     public void MostrarParticipantes(){
         System.out.println("Participantes: ");
         for (int i = 0; i < jugadores.size(); i++) {
-            System.out.println("-"+jugadores.get(i).getName());
+            JugadorBulls jugador = jugadores.get(i);
+            if (jugador != null) {
+                System.out.println("-" + jugador.getnombre());
+            }
         }
         System.out.println("");
     }
-    public int seleccionarMontoApostar() {
+    public void continuarJugando() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Selecciona el monto para apostar:");
-        System.out.println("1. $500");
-        System.out.println("2. $1000");
-        System.out.println("3. $5000");
-        System.out.println("4. $10000");
-        System.out.println("5. $25000");
-        System.out.println("6. $50000");
-        System.out.println("7. Salir");
+        System.out.println("¿Deseas seguir jugando? (S/N)");
+        String respuesta = scanner.nextLine();
 
-        int opcion = scanner.nextInt();
-
-        if (opcion == 7) {
-            return -1;
-        }
-
-        int monto = obtenerMonto(opcion);
-        if (monto > dinero) {
-            System.out.println("No tienes suficiente dinero para apostar");
-            return -2;
-        }
-
-        dineroApostado = monto;
-        dinero -= dineroApostado;
-
-        return opcion;
+        if (respuesta.equalsIgnoreCase("S")) {
+            iniciarCarrera();
+        } else
+            System.exit(0);
     }
 }
-
-

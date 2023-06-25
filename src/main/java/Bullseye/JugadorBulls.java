@@ -1,22 +1,15 @@
 package Bullseye;
 
-public class jugadorBulls {
+import Casino.Usuario;
 
-    private String name;
+public class JugadorBulls extends Usuario {
     private int dinero;
     private Caballo caballoAsignado;
 
-    public jugadorBulls(String name, int dinero) {
-        this.name = name;
+    public JugadorBulls(String nombre) {
+        super(nombre);
         this.dinero = dinero;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getDinero() {
-        return dinero;
+        this.nombre = nombre;
     }
 
     public Caballo getCaballoAsignado() {
@@ -26,4 +19,9 @@ public class jugadorBulls {
     public void asignarCaballo(Caballo caballo) {
         caballoAsignado = caballo;
     }
+
+    public String getnombre(){
+        return nombre;
+    }
+
 }
