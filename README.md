@@ -23,3 +23,5 @@ Si el jugador principal pierde, se muestra un mensaje de que ha perdido y se ver
 Si el jugador tiene suficiente dinero, se le pregunta si desea continuar jugando
 Si el jugador decide seguir jugando, se inicia una nueva carrera
 Si el jugador decide no continuar, el juego termina
+
+Con respecto a las guis, aun no entiendo como realizarlas bien asique estan en proceso.
